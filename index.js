@@ -2,7 +2,8 @@ const express = require ('express')
 const path = require ('path')
 const bodyParser = require ('body-parser')
 const morgan = require ('morgan')
-
+require('./passport-strategy')
+const auth = require('./auth')
 const app = express()
 
 app.use((req, res, next) => {
@@ -17,6 +18,7 @@ app.use(morgan('dev'))
 app.use(bodyParser.urlencoded({ extended:  false }))
 app.use(bodyParser.json())
 app.use(express.static(__dirname + '/public'))
+app.use('/auth', auth)
 
 app.get('/', (req, res) => {
   res.send('Hello')
