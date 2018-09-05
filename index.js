@@ -4,6 +4,8 @@ const bodyParser = require ('body-parser')
 const morgan = require ('morgan')
 require('./passport-strategy')
 const auth = require('./auth')
+const passport = require('passport')
+
 const app = express()
 
 app.use((req, res, next) => {
@@ -19,6 +21,10 @@ app.use(bodyParser.urlencoded({ extended:  false }))
 app.use(bodyParser.json())
 app.use(express.static(__dirname + '/public'))
 app.use('/auth', auth)
+
+app.get('/test', passport.authenticate('jwt', {session: false}), (req, res) => {
+  res.send(`authorized for user ${req.user.username} with id ${req.user.id}`)
+})
 
 app.get('/', (req, res) => {
   res.send('Hello')
