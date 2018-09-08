@@ -22,4 +22,9 @@ router.post('/login', function (req, res, next){
   })(req, res, next)
 })
 
+router.get('/test', passport.authenticate('jwt', {session: false}), (req, res) => {
+  res.send(`authorized for user ${req.user.username} with id ${req.user.id}`)
+})
+
 module.exports = router
+
