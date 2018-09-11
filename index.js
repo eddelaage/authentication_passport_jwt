@@ -1,11 +1,14 @@
+const  http = require('http');
 const express = require ('express')
 const path = require ('path')
 const bodyParser = require ('body-parser')
 const morgan = require ('morgan')
 require('./passport-strategy')
-const auth = require('./auth')
+const mysql = require('mysql2')
+const authRouter = require('./routes/auth/auth.js')
+const connection = require('./helpers/db.js')
 const passport = require('passport')
-var cors = require('cors')
+const cors = require('cors')
 
 const app = express()
 
@@ -23,7 +26,7 @@ app.use(morgan('dev'))
 app.use(bodyParser.urlencoded({ extended:  false }))
 app.use(bodyParser.json())
 app.use(express.static(__dirname + '/public'))
-app.use('/auth', auth)
+app.use('/auth', authRouter)
 
 app.get('/test', passport.authenticate('jwt', {session: false}), (req, res) => {
   res.send(`authorized for user ${req.user.username} with id ${req.user.id}`)

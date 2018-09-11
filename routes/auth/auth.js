@@ -2,6 +2,11 @@ const express = require('express')
 const router = express.Router()
 const jwt = require('jsonwebtoken')
 const passport = require('passport')
+const connection = require('../../helpers/db.js')
+
+router.get('/', (req, res) =>{
+  res.send('I am in auth')
+})
 
 //POST login
 router.post('/login', function (req, res, next){
@@ -24,6 +29,28 @@ router.post('/login', function (req, res, next){
 
 router.get('/test', passport.authenticate('jwt', {session: false}), (req, res) => {
   res.send(`authorized for user ${req.user.username} with id ${req.user.id}`)
+})
+
+//ADD USER
+const insertUserQuery = `
+  INSERT INTO users (email, password, firstName, lastName, birthDate, gender)
+  VALUES (?, ?, ?, ?, ?, ?)`
+
+router.post('/signup', function(req, res, next) {
+  const email = req.body.email
+  const password = req.body.password
+  const firstName = req.body.firstName
+  const lastName = req.body.lastName
+  const birthDate = req.body.birthDate
+  const gender = req.body.gender
+  const values = [email, password, firstName, lastName, birthDate, gender]
+  connection.query(insertUserQuery, values)
+    .then(result => {
+      res.status(200).json({ flash:  "User has been signed up !" });
+    })
+    .catch(err => {
+      res.status(500).json({ flash:  err.message })
+    })
 })
 
 module.exports = router
