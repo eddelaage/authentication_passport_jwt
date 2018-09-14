@@ -10,6 +10,7 @@ router.get('/', (req, res) =>{
 
 //POST login
 router.post('/login', function (req, res, next){
+  // console.log(req.body)
   passport.authenticate('local', {session: false}, (err, user, info) => {
     if (err || !user) {
       return res.status(400).json({
@@ -28,7 +29,7 @@ router.post('/login', function (req, res, next){
 })
 
 router.get('/test', passport.authenticate('jwt', {session: false}), (req, res) => {
-  res.send(`authorized for user ${req.user.username} with id ${req.user.id}`)
+  res.send(`authorized for user ${req.user.email} with id ${req.user.id}`)
 })
 
 //ADD USER

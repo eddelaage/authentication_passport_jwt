@@ -4,7 +4,7 @@ const path = require ('path')
 const bodyParser = require ('body-parser')
 const morgan = require ('morgan')
 require('./passport-strategy')
-const mysql = require('mysql2')
+const mysql = require('mysql')
 const authRouter = require('./routes/auth/auth.js')
 const connection = require('./helpers/db.js')
 const passport = require('passport')
@@ -29,6 +29,7 @@ app.use(express.static(__dirname + '/public'))
 app.use('/auth', authRouter)
 
 app.get('/test', passport.authenticate('jwt', {session: false}), (req, res) => {
+  console.log('token')
   res.send(`authorized for user ${req.user.username} with id ${req.user.id}`)
 })
 
