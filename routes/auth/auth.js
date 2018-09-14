@@ -3,6 +3,8 @@ const router = express.Router()
 const jwt = require('jsonwebtoken')
 const passport = require('passport')
 const connection = require('../../helpers/db.js')
+var bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 router.get('/', (req, res) =>{
   res.send('I am in auth')
@@ -33,9 +35,6 @@ router.get('/test', passport.authenticate('jwt', {session: false}), (req, res) =
 })
 
 //ADD USER
-const insertUserQuery = `
-  INSERT INTO users (email, password, firstName, lastName, birthDate, gender)
-  VALUES (?, ?, ?, ?, ?, ?)`
 
 router.post('/signup', function(req, res, next) {
   const email = req.body.email
@@ -45,13 +44,19 @@ router.post('/signup', function(req, res, next) {
   const birthDate = req.body.birthDate
   const gender = req.body.gender
   const values = [email, password, firstName, lastName, birthDate, gender]
-  connection.query(insertUserQuery, values)
-    .then(result => {
-      res.status(200).json({ flash:  "User has been signed up !" });
-    })
-    .catch(err => {
-      res.status(500).json({ flash:  err.message })
-    })
+
+  const signup = new Promise(function(resolve, reject){
+    bcrypt.hash(password, saltRounds).then(function(hash) {
+    connection.query(`INSERT INTO users (email, password, firstName, lastName, birthDate, gender)
+      VALUES (?, ?, ?, ?, ?, ?)`,[email, hash, firstName, lastName, birthDate, gender])
+  })
+  .then(result => {
+    res.status(200).json({ flash:  "User has been signed up !" })
+  })
+  .catch(err => {
+    res.status(500).json({ flash:  err.message })
+  })
+})
 })
 
 module.exports = router
