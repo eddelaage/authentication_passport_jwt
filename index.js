@@ -11,6 +11,9 @@ const connection = require('./helpers/db.js')
 const passport = require('passport')
 const cors = require('cors')
 
+var bcrypt = require('bcrypt');
+const saltRounds = 10;
+
 const app = express()
 
 app.use(cors())
