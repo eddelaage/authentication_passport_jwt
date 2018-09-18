@@ -58,6 +58,8 @@ typings/
 .env
 config.json
 .env
+bdd.mwb
+bdd.mwb.back
 
 # next.js build output
 .next
