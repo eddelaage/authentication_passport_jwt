@@ -31,6 +31,7 @@ function (jwtPayload, cb){
   return cb (null, user)
 }))
 
+
 //Connnection de base avec toto // Wildecode
 
 //connection.queryOne('SELECT * FROM users WHERE email = ?', [email],)

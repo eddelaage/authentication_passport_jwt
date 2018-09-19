@@ -12,7 +12,7 @@ const passport = require('passport')
 const cors = require('cors')
 
 
-var bcrypt = require('bcrypt');
+var bcrypt = require('bcrypt')
 const saltRounds = 10;
 
 const app = express()
